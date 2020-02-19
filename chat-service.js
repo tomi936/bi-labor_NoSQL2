@@ -11,17 +11,20 @@ const chatService = {};
 
 // A felhasználónk neve
 let myUsername;
+let myAvatar;
 
 // Az üzenet model leírása
 const Message = mongoose.model('Message', new mongoose.Schema({
     user: String,
     date: Date,
     content: String,
-    room: String
+    room: String,
+    avatarUrl: String
   }));
 
-  chatService.connect = function (username, serverAddress, password, successCb, failCb, messageCallback, userCallback) {
+  chatService.connect = function (username, serverAddress, password,avatar, successCb, failCb, messageCallback, userCallback) {
     myUsername = username;
+    myAvatar = avatar;
     let dbReady = false;
     let mqReady = false;
   
@@ -103,7 +106,8 @@ chatService.sendMessage = function (roomId, message) {
       user: myUsername,
       date: message.date,
       content: message.content,
-      room: roomId
+      room: roomId,
+      avatarUrl: myAvatar
     });
     msg.save().then(function () {
       // Szólunk hogy frissítettük a szobában az üzeneteket

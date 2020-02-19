@@ -12,13 +12,14 @@ chatController.login = function () {
     let usernameInput = document.getElementById('usernameInput');
     let serverInput = document.getElementById('serverInput');
     let passwordInput = document.getElementById('passwordInput');
+    let avatarInput = document.getElementById('avatarInput');
 
 
     if (_.isEmpty(usernameInput.value) || _.isEmpty(serverInput.value)) {
         alert('Kérlek add meg az összes adatot!');
     } else {
         myUsername = _.escape(usernameInput.value);
-        chatService.connect(usernameInput.value, serverInput.value, passwordInput.value, function () {
+        chatService.connect(usernameInput.value, serverInput.value, passwordInput.value, avatarInput.value, function () {
                 //Sikeres csatlakozás esetén
                 // Screen-t váltunk (szegényember SPA-ja)
                 document.getElementById('login-window').style.display = 'none';
@@ -50,10 +51,11 @@ chatController.renderNewMessage = function (message) {
     // Megkeressük a DOM-ban a "messages" ID-val rendelkező üzenő területet, ami egy rendezetlen lista (<ul>).
     let messageArea = document.getElementById('messages');
 
+    let avatarUrl = message.avatarUrl !== undefined? message.avatarUrl : "assets/user.png";
     // Kitöltünk és hozzáadunk egy új üzenetet a HTML sablon alapján
     messageArea.insertAdjacentHTML('beforeEnd',
         '<div class="media messages">' +
-        '<img src="assets/user.png" width="40" height="40" class="mr-3 message-avatar">' +
+        '<img src="'+avatarUrl+'" width="40" height="40" class="mr-3 message-avatar">' +
         '<div class="media-body">' +
         '<h5 class="mt-0">' + _.escape(message.user) + '</h5>' + _.escape(message.content) +
         '</div>' +
