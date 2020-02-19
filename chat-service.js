@@ -4,6 +4,7 @@ let redis = require('redis');
 
 const roomsChannel = 'rooms_channel';
 const usersChannel = 'users_channel';
+const channelsChannel = 'channels_channel';
 let redisClient;
 let redisSubscriberClient;
 
@@ -26,7 +27,7 @@ const Message = mongoose.model('Message', new mongoose.Schema({
     name: String
   }));
 
-  chatService.connect = function (username, serverAddress, password,avatar, successCb, failCb, messageCallback, userCallback) {
+  chatService.connect = function (username, serverAddress, password,avatar, successCb, failCb, messageCallback, userCallback, channelCallback) {
     myUsername = username;
     myAvatar = avatar;
     let dbReady = false;
@@ -50,6 +51,7 @@ const Message = mongoose.model('Message', new mongoose.Schema({
       redisSubscriberClient = redisClient.duplicate();
       redisSubscriberClient.subscribe(roomsChannel);
       redisSubscriberClient.subscribe(usersChannel);
+      redisSubscriberClient.subscribe(channelsChannel);
       redisSubscriberClient.on('message', function (channel, message) {
         if (channel === roomsChannel) {
           // Ha a szoba channel-be érkezik üzenet azt jelenti valamelyik szobába frissíteni kell az üzeneteket
@@ -57,8 +59,12 @@ const Message = mongoose.model('Message', new mongoose.Schema({
         } else if (channel === usersChannel) {
           // Ha a user channelbe érkezik üzenet azt jelenti változott a user lista
           userCallback();
-        }
+        }else if (channel === channelsChannel) {
+            // Ha a user channelbe érkezik üzenet azt jelenti változott a user lista
+            channelCallback();
+          }
       });
+      
   
       successCb();
     }
@@ -87,6 +93,17 @@ chatService.disconnect = function () {
     if (!_.isUndefined(redisClient)) {
       redisClient.zrem(usersChannel, myUsername);
       redisClient.publish(usersChannel, myUsername);
+    }
+  };
+
+chatService.addChannel = function () {
+    if (!_.isUndefined(redisClient)) {
+        let ch = new Channel({
+            name: "testing"
+          });
+          ch.save().then(function () {
+            redisClient.publish(channelsChannel, ch.name);
+          })
     }
   };
 

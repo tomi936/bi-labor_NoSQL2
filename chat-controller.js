@@ -43,6 +43,9 @@ chatController.login = function () {
             // Változott a felhasználók száma
             function () {
                 chatController.refreshUsers();
+            },
+            // Változott a csatornák száma
+            function () {
                 chatController.refreshChannels();
             });
     }
@@ -106,6 +109,10 @@ chatController.changeRoom = function (roomName) {
     selectedRoom = roomName;
     chatController.refreshRoom();
     chatController.refreshUsers();
+};
+
+chatController.addChannel = function () {
+    chatService.addChannel();
 };
 
 // Frissítjük a szoba üzeneteinek tartalmát
