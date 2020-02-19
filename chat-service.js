@@ -104,10 +104,9 @@ chatService.getUsers = function (cb) {
     });
   };
 
-// Visszaadja a bejelentkezett usereket
+// Visszaadja a csatornák listáját
 chatService.getChannels = function (cb) {
     Channel.find({}, function (err, ch) {
-        debugger;
         cb(ch)
       });
   };

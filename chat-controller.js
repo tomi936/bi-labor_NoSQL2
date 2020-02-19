@@ -139,7 +139,7 @@ chatController.refreshChannels = function () {
     // Betöltjük a felhasználókat (magunkat nem írjuk ki)
     chatService.getChannels(function (channels) {
         _.forEach(channels, function (channel) {
-            userList.insertAdjacentHTML('beforeEnd', '<li class="selector-panel-item" onclick="chatController.changeRoom('+channel+')">'+channel+'</li>');
+            channelList.insertAdjacentHTML('beforeEnd', '<li class="selector-panel-item" onclick="chatController.changeRoom(\''+channel.name+'\')">'+channel.name+'</li>');
         });
     });
 };
