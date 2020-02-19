@@ -29,6 +29,7 @@ chatController.login = function () {
                 document.getElementById('username').innerText = myUsername;
                 chatController.refreshUsers();
                 chatController.refreshRoom();
+                chatController.refreshChannels();
             },
             function (err) {
                 alert("Nem sikerült csatlakozni az adatbázishoz: " + err)
@@ -42,6 +43,7 @@ chatController.login = function () {
             // Változott a felhasználók száma
             function () {
                 chatController.refreshUsers();
+                chatController.refreshChannels();
             });
     }
 };
@@ -126,6 +128,18 @@ chatController.refreshUsers = function () {
             if (myUsername !== user) {
                 chatController.renderNewUser(user);
             }
+        });
+    });
+};
+
+// Frissítjük a csatorna lista tartalmát
+chatController.refreshChannels = function () {
+    document.getElementById('channel-list').innerHTML = '';
+    let channelList = document.getElementById('channel-list');
+    // Betöltjük a felhasználókat (magunkat nem írjuk ki)
+    chatService.getChannels(function (channels) {
+        _.forEach(channels, function (channel) {
+            userList.insertAdjacentHTML('beforeEnd', '<li class="selector-panel-item" onclick="chatController.changeRoom('+channel+')">'+channel+'</li>');
         });
     });
 };

@@ -22,6 +22,10 @@ const Message = mongoose.model('Message', new mongoose.Schema({
     avatarUrl: String
   }));
 
+  const Channel = mongoose.model('Channel', new mongoose.Schema({
+    name: String
+  }));
+
   chatService.connect = function (username, serverAddress, password,avatar, successCb, failCb, messageCallback, userCallback) {
     myUsername = username;
     myAvatar = avatar;
@@ -98,6 +102,14 @@ chatService.getUsers = function (cb) {
     redisClient.zrange(usersChannel, 0, -1, function (error, result) {
       cb(result);
     });
+  };
+
+// Visszaadja a bejelentkezett usereket
+chatService.getChannels = function (cb) {
+    Channel.find({}, function (err, ch) {
+        debugger;
+        cb(ch)
+      });
   };
 
 // Üzenetet küld
